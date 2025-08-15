@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:alpine3.22
+    environment:
+      POSTGRES_USER: g3gs
+      POSTGRES_PASSWORD: g3gs
+      POSTGRES_DB: g3gs
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shortlink"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - g3gs-network
+
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    volumes:
+      - dragonfly_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - g3gs-network
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      dragonfly:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://g3gs:g3gs@postgres:5432/g3gs
+      - REDIS_URL=redis://dragonfly:6379
+      - DOMAIN=http://localhost:3000
+    volumes:
+      - ./src:/app/src
+    command: ["./G3GS"]
+    networks:
+      - g3gs-network
+
+volumes:
+  postgres_data:
+  dragonfly_data:
+
+networks:
+  g3gs-network:
+    driver: bridge
