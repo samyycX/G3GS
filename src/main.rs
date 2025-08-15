@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Database setup
     let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://shortlink:shortlink123@localhost:5432/shortlink".to_string());
+        .unwrap_or_else(|_| "postgres://g3gs:g3gs@localhost:5432/g3gs".to_string());
     
     let pool = create_pool(&database_url).await.unwrap();
     
@@ -103,8 +103,7 @@ async fn handle_shortcode_or_static(
 ) -> Result<Redirect, StatusCode> {
     // 如果路径中包含点号，则认为是静态资源
     if short_code.contains('.') {
-        // 静态资源请求，返回404让fallback处理
-        return Err(StatusCode::NOT_FOUND);
+        return Ok(Redirect::permanent(format!("/public/{}", short_code).as_str()))
     }
     
     // 否则处理为短链接重定向
