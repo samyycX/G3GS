@@ -248,12 +248,56 @@ export default function Home() {
         ></div>
       </div>
 
-      <div className="relative z-10 min-h-screen flex flex-col justify-between items-center justify-center p-4 max-w-4xl mx-auto">
-        <div className="w-full h-full max-w-2xl mb-8 space-y-4 flex-1 flex flex-col justify-center">
-          <form onSubmit={generateShortLink}>
-            <div className="flex flex-col">
-              <div className="md:hidden w-full space-y-2">
-                <div className="flex flex-row border border-gray-700 rounded-lg bg-gray-900/50">
+      <div className="relative z-10 min-h-screen flex flex-col justify-between items-center p-4 max-w-4xl mx-auto gap-10">
+        <div className="w-full h-full items-center flex flex-col mt-[30vh] md:m-auto gap-3">
+          <div className="w-full max-w-2xl flex flex-col justify-center">
+
+            <form onSubmit={generateShortLink}>
+              <div className="flex flex-col">
+                <div className="md:hidden w-full space-y-2">
+                  <div className="flex flex-row border border-gray-700 rounded-lg bg-gray-900/50">
+                    <div className="w-30 border-r border-gray-700 text-center m-auto">
+                      <Select value={expiration} onValueChange={setExpiration}>
+                        <SelectTrigger className="h-12 bg-transparent border-0 text-white rounded-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 m-auto cursor-pointer">
+                          <div className="flex items-center justify-center w-full">
+                            <SelectValue />
+                          </div>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {expirationOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value} className="cursor-pointer">
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex-1">
+                      <Input
+                        type="url"
+                        placeholder="Enter your URL here..."
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        required
+                        className="h-12 text-sm md:text-lg bg-transparent border-0 text-white placeholder:text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 rounded-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="w-full">
+                    <Button
+                      type="submit"
+                      className="h-12 text-sm bg-white text-black hover:bg-gray-100 font-mono tracking-wider w-full cursor-pointer rounded-lg"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "SHORTENING..." : "SHORTEN"}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Desktop layout: horizontal row (unchanged) */}
+                <div className="hidden md:flex w-full bg-gray-900/50 border border-gray-700 rounded-lg overflow-hidden flex-row">
+                  {/* Expiration selector - styled to blend seamlessly */}
                   <div className="w-30 border-r border-gray-700 text-center m-auto">
                     <Select value={expiration} onValueChange={setExpiration}>
                       <SelectTrigger className="h-12 bg-transparent border-0 text-white rounded-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 m-auto cursor-pointer">
@@ -270,6 +314,8 @@ export default function Home() {
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {/* URL input - styled to blend seamlessly */}
                   <div className="flex-1">
                     <Input
                       type="url"
@@ -277,68 +323,24 @@ export default function Home() {
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       required
-                      className="h-12 text-sm md:text-lg bg-transparent border-0 text-white placeholder:text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 rounded-none"
+                      className="h-12 text-lg bg-transparent border-0 text-white placeholder:text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 rounded-none"
                     />
                   </div>
-                </div>
 
-                <div className="w-full">
-                  <Button
-                    type="submit"
-                    className="h-12 text-sm bg-white text-black hover:bg-gray-100 font-mono tracking-wider w-full cursor-pointer rounded-lg"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "SHORTENING..." : "SHORTEN"}
-                  </Button>
+                  {/* Generate button - styled to blend seamlessly */}
+                  <div className="border-l border-gray-700">
+                    <Button
+                      type="submit"
+                      className="h-12 text-sm bg-white text-black hover:bg-gray-100 font-mono tracking-wider w-32 cursor-pointer border-0 rounded-none"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "SHORTENING..." : "SHORTEN"}
+                    </Button>
+                  </div>
                 </div>
               </div>
-
-              {/* Desktop layout: horizontal row (unchanged) */}
-              <div className="hidden md:flex w-full bg-gray-900/50 border border-gray-700 rounded-lg overflow-hidden flex-row">
-                {/* Expiration selector - styled to blend seamlessly */}
-                <div className="w-30 border-r border-gray-700 text-center m-auto">
-                  <Select value={expiration} onValueChange={setExpiration}>
-                    <SelectTrigger className="h-12 bg-transparent border-0 text-white rounded-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 m-auto cursor-pointer">
-                      <div className="flex items-center justify-center w-full">
-                        <SelectValue />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {expirationOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value} className="cursor-pointer">
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* URL input - styled to blend seamlessly */}
-                <div className="flex-1">
-                  <Input
-                    type="url"
-                    placeholder="Enter your URL here..."
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    required
-                    className="h-12 text-lg bg-transparent border-0 text-white placeholder:text-gray-400 focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 rounded-none"
-                  />
-                </div>
-
-                {/* Generate button - styled to blend seamlessly */}
-                <div className="border-l border-gray-700">
-                  <Button
-                    type="submit"
-                    className="h-12 text-sm bg-white text-black hover:bg-gray-100 font-mono tracking-wider w-32 cursor-pointer border-0 rounded-none"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "SHORTENING..." : "SHORTEN"}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
 
         {history.length > 0 && (
           <div className="w-full max-w-2xl">
@@ -399,6 +401,7 @@ export default function Home() {
             </div>
           </div>
         )}
+        </div>
         
         <Footer />
         
