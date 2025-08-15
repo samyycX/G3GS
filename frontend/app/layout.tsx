@@ -9,9 +9,6 @@ export const metadata: Metadata = {
   title: "G3.GS Short Link",
   description: "Transform your long URLs into short, shareable links",
   generator: "v0.app",
-  icons: {
-    icon: "/favicon.ico"
-  },
   // 添加静态导出相关的元数据
   robots: {
     index: true,
@@ -34,6 +31,7 @@ html {
   --font-mono: ${GeistMono.variable};
 }
         `}</style>
+      <link rel="icon" href="/favicon.ico?v=2" />
       </head>
       <body className="min-h-screen flex flex-col">
         <main className="flex-1">
