@@ -47,7 +47,7 @@ COPY --from=rust-builder /app/migrations ./migrations
 # Copy frontend build output
 COPY --from=frontend-builder /frontend/.next/server/app ./frontend
 COPY --from=frontend-builder /frontend/.next/static ./frontend/_next/static
-COPY --from=frontend-builder /frontend/public/favicon.ico ./frontend/favicon.ico
+COPY --from=frontend-builder /frontend/public ./frontend/public
 
 # Create non-root user
 RUN useradd -r -s /bin/false appuser
