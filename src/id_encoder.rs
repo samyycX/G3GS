@@ -1,17 +1,22 @@
 const BASE58_CHARS: &[u8] = b"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
+// 方法1：编码时减1，解码时加1（推荐）
 pub fn encode_id(id: u64) -> String {
   if id == 0 {
+      return "".to_string();
+  }
+  
+  let mut adjusted_id = id - 1;
+  let mut result = Vec::new();
+  
+  if adjusted_id == 0 {
       return "1".to_string();
   }
   
-  let mut id = id;
-  let mut result = Vec::new();
-  
-  while id > 0 {
-      let remainder = (id % 58) as usize;
+  while adjusted_id > 0 {
+      let remainder = (adjusted_id % 58) as usize;
       result.push(BASE58_CHARS[remainder]);
-      id /= 58;
+      adjusted_id /= 58;
   }
   
   result.reverse();
@@ -41,5 +46,5 @@ pub fn decode_id(encoded: &str) -> Result<u64, &'static str> {
           .ok_or("Overflow")?;
   }
   
-  Ok(result)
+  Ok(result + 1)
 }
